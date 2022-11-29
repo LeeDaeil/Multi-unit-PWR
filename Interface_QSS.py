@@ -59,6 +59,12 @@ QssMain = ''.join([
     builder('QLabel', 'UnitStateEmergency', [f'background-color: {LightWhite};', 'border-radius: 5px;', f'font-family: {Global_font};', f'font-size: {Content_font_size};', "qproperty-alignment: 'AlignCenter';", 'font-weight: bold;']),
     builder('QLabel', 'UnitStateEmergency[State="On"]', [f'background-color: {DarkRed};']),
     builder('QLabel', 'UnitStateEmergency[State="Off"]', [f'background-color: {LightGray};']),
+    # Interface_CNS.py -------------------------------------------------------------------------------
+    builder('QWidget', 'CNSController', [f'background-color: {Gray};', 'border-radius: 5px;']),
+    builder('QLabel', 'CNSControllerTitle', [f'background-color: {LightBlue};', 'border-radius: 5px;', f'font-family: {Global_font};', f'font-size: {Content_font_size};', "qproperty-alignment: 'AlignCenter';", 'font-weight: bold;']),
+    builder('QPushButton', 'CNSControllerInit', [f'background-color: {LightWhite};', 'border-radius: 5px;', f'font-family: {Global_font};', f'font-size: {Content_font_size};', 'font-weight: bold;']),
+    builder('QPushButton', 'CNSControllerRun', [f'background-color: {LightWhite};', 'border-radius: 5px;', f'font-family: {Global_font};', f'font-size: {Content_font_size};', 'font-weight: bold;']),
+    builder('QPushButton', 'CNSControllerMal', [f'background-color: {Green};', 'border-radius: 5px;', f'font-family: {Global_font};', f'font-size: {Content_font_size};', 'font-weight: bold;']),
 ])
 # final qss !! 
 qss = ''.join(

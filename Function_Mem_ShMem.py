@@ -8,6 +8,7 @@ class ShMem:
         self.mem = self.make_cns_mem(max_len=10)
         self.AlarmDB: AlarmDB = AlarmDB(self)
         self.add_val_to_list()
+        self.logic = {'Run': False, 'Init_Call':False, 'Init_nub': 1, 'Mal_Call': False, 'Mal_list': {}}
 
     def make_cns_mem(self, max_len, db_path='./db.txt', db_add_path='./db_add.txt'):
         # 초기 shared_mem의 구조를 선언한다.
@@ -37,7 +38,11 @@ class ShMem:
 
     def change_para_val(self, para, val):
         self.mem[para]['Val'] = val
-
+    
+    def change_mal_val(self, mal_index, mal_dict):
+        self.logic['Mal_list'][mal_index] = mal_dict
+        self.logic['Mal_Call'] = True
+        
     def get_para_val(self, para):
         return self.mem[para]['Val']
 
@@ -65,6 +70,23 @@ class ShMem:
     def check_para_type(self, para):
         return self.mem[para]['Sig']
 
+    def call_run(self):
+        self.logic['Run'] = True
+    
+    def call_freeze(self):
+        self.logic['Run'] = False
+    
+    def call_init(self):
+        self.logic['Init_Call'] = True
+    
+    def call_mal(self):
+        self.logic['Mal_Call'] = True
+    
+    def get_logic(self, para):
+        return self.logic[para]
+    
+    def change_logic(self, para, val):
+        self.logic[para] = val
 
 class InterfaceMem:
     def __init__(self, Shmems, top_widget):
@@ -91,3 +113,15 @@ class InterfaceMem:
 
     def get_para_val(self, unit, para):
         return self.ShMemUnits[unit].get_para_val(para)
+
+    def call_init(self):
+        [self.ShMemUnits[unit].call_init() for unit in self.ShMemUnits.keys()]
+
+    def call_run(self):
+        [self.ShMemUnits[unit].call_run() for unit in self.ShMemUnits.keys()]
+    
+    def call_freeze(self):
+        [self.ShMemUnits[unit].call_freeze() for unit in self.ShMemUnits.keys()]
+        
+    def call_mal(self, unit):
+        self.ShMemUnits[unit].call_mal()

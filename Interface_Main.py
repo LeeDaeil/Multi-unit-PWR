@@ -30,6 +30,7 @@ class Main(QWidget):
 
         # End frame --------------------------------------------------
         self.CNSController = CNSController(self)
+        self.CNSController.show()
 
     # window drag
     def mousePressEvent(self, event):        

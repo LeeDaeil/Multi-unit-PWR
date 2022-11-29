@@ -9,5 +9,55 @@ from Interface_QSS import qss
 class CNSController(ABCWidget):
     def __init__(self, parent, widget_name=''):
         super().__init__(parent, widget_name)
-        self.setGeometry(0, 0, 600, 600)
-        
+        self.setStyleSheet(qss)
+        self.setGeometry(0, 0, 200, 200)
+        vl = QVBoxLayout(self)
+        vl.addWidget(CNSControllerTitle(self))
+        vl.addWidget(CNSControllerInit(self))
+        vl.addWidget(CNSControllerRun(self))
+        gl = QGridLayout()
+        gl.addWidget(CNSControllerMal(self, 0), 0, 0, 1, 1)
+        gl.addWidget(CNSControllerMal(self, 1), 1, 0, 1, 1)
+        gl.addWidget(CNSControllerMal(self, 2), 0, 1, 1, 1)
+        gl.addWidget(CNSControllerMal(self, 3), 1, 1, 1, 1)
+        vl.addLayout(gl)
+class CNSControllerTitle(ABCLabel):
+    def __init__(self, parent, widget_name=''):
+        super().__init__(parent, widget_name)
+        self.setText('CNS Controller')
+        self.setFixedHeight(40)
+class CNSControllerInit(ABCPushButton):
+    def __init__(self, parent, widget_name=''):
+        super().__init__(parent, widget_name)
+        self.setText('Call Init')
+    
+    def mousePressEvent(self, e: QMouseEvent) -> None:
+        self.inmem.call_init()
+        return super().mousePressEvent(e)
+class CNSControllerRun(ABCPushButton):
+    def __init__(self, parent, widget_name=''):
+        super().__init__(parent, widget_name)
+        self.setText('Freeze')
+        self.Condition = False
+    
+    def mousePressEvent(self, e: QMouseEvent) -> None:
+        if self.Condition:
+            self.inmem.call_freeze()
+            self.setText('Freeze')
+            self.Condition = False
+        else:
+            self.inmem.call_run()
+            self.setText('Run')
+            self.Condition = True
+        return super().mousePressEvent(e)
+class CNSControllerMal(ABCPushButton):
+    def __init__(self, parent, unit, widget_name=''):
+        super().__init__(parent, widget_name)
+        self.unit = unit
+        self.setText(f'Mal Module {unit}')
+        self.Condition = False
+    
+    def mousePressEvent(self, e: QMouseEvent) -> None:
+        self.inmem.call_mal(self.unit)
+        self.setText('Activate')
+        return super().mousePressEvent(e)
