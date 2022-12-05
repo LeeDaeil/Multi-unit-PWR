@@ -28,7 +28,11 @@ class WrapCNS(multiprocessing.Process):
                     print('Call init')
                     self.CNS.init_cns(1)
                     self.mem.change_logic('Init_Call', False)
-                if self.mem.get_logic('Mal_Call'):
+                if self.mem.get_logic('Mal_LOCA_Call'):
                     print('Activate LOCA')
                     self.CNS._send_malfunction_signal(12, 100100, 10)
-                    self.mem.change_logic('Mal_Call', False)
+                    self.mem.change_logic('Mal_LOCA_Call', False)
+                if self.mem.get_logic('Mal_Rod_Call'):
+                    print('Activate Rod')
+                    self.CNS._send_malfunction_signal(2, 123, 10)
+                    self.mem.change_logic('Mal_Rod_Call', False)

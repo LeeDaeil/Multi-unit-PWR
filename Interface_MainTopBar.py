@@ -13,6 +13,8 @@ class MainTopBar(ABCWidget):
         hl.addWidget(self.timerlabel)
         hl.addStretch(1)
         hl.addWidget(MainTopBarClose(self))
+        hl.setContentsMargins(0, 0, 0, 0)
+        hl.setSpacing(0)
     
     def check_mouse_in_area(self):
         return any([self.underMouse(), self.timerlabel.underMouse()])
@@ -20,7 +22,7 @@ class MainTopBar(ABCWidget):
 class MainTopBarTimer(ABCLabel):
     def __init__(self, parent, widget_name=''):
         super().__init__(parent, widget_name)
-        self.setFixedSize(465, 35)
+        self.setFixedSize(245, 35)
         self.startTimer(200)
 
     def timerEvent(self, a0: 'QTimerEvent') -> None:

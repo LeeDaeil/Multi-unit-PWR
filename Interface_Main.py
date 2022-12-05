@@ -14,7 +14,7 @@ class Main(QWidget):
         super(Main, self).__init__()
         self.inmem:InterfaceMem = InterfaceMem(ShMems, self)
         self.setGeometry(0, 0, 1024, 768)
-        self.setWindowFlags(Qt.FramelessWindowHint)  # 상단바 제거
+        self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)  # 상단바 제거 | # 항상위
         self.setObjectName('Main')
         self.setStyleSheet(qss) # qss load
         self.m_flag = False
@@ -39,6 +39,10 @@ class Main(QWidget):
             self.m_Position = event.globalPos() - self.pos()
             event.accept()
             self.setCursor(QCursor(Qt.OpenHandCursor))
+    
+    def mouseDoubleClickEvent(self, a0: QMouseEvent) -> None:
+        self.showMaximized()
+        return super().mouseDoubleClickEvent(a0)
 
     def mouseMoveEvent(self, QMouseEvent):
         if Qt.LeftButton and self.m_flag and self.maintopbar.check_mouse_in_area():
@@ -58,10 +62,13 @@ class UnitWidget(ABCWidget):
         vl = QVBoxLayout(self)
         vl.addWidget(UnitTitleLabel(self, unit))
         hl = QHBoxLayout()
-        hl.addWidget(UnitLabel(self, unit, 'Power', 'KBCDO23', '[%]'))
-        hl.addWidget(UnitLabel(self, unit, 'Electric Power', 'KBCDO22', '[MWe]'))
+        hl.addWidget(UnitLabel(self, unit, 'Power', 'KBCDO23', '%'))
+        hl.addWidget(UnitLabel(self, unit, 'Electric Power', 'KBCDO22', 'MWe'))
+        hl.setSpacing(5)
         vl.addLayout(hl)
         hl2 = QHBoxLayout()
+        hl2.setContentsMargins(0, 0, 0, 0)
+        hl2.setSpacing(5)
         hl2.addWidget(UnitStateNormal(self, unit))
         hl2.addWidget(UnitStateAbnormal(self, unit))
         hl2.addWidget(UnitStateEmergency(self, unit))
@@ -104,7 +111,10 @@ class UnitStateAbnormal(ABCLabel):
         self.startTimer(600)
         
     def timerEvent(self, a0: 'QTimerEvent') -> None:
-        self.setProperty('State', 'On' if 10 < self.inmem.get_para_val(self.unit, 'KBCDO23') < 95 else 'Off')
+        if self.inmem.get_para_val(self.unit, 'KRXTRIP') >= 1:
+            self.setProperty('State', 'Off')
+        else:
+            self.setProperty('State', 'On' if 10 < self.inmem.get_para_val(self.unit, 'KBCDO23') < 95 else 'Off')
         self.style().polish(self)
         return super().timerEvent(a0)
 class UnitStateEmergency(ABCLabel):
@@ -116,6 +126,9 @@ class UnitStateEmergency(ABCLabel):
         self.startTimer(600)
         
     def timerEvent(self, a0: 'QTimerEvent') -> None:
-        self.setProperty('State', 'On' if self.inmem.get_para_val(self.unit, 'KBCDO23') <= 10 else 'Off')
+        if self.inmem.get_para_val(self.unit, 'KRXTRIP') < 1:
+            self.setProperty('State', 'Off')
+        else:
+            self.setProperty('State', 'On')        
         self.style().polish(self)
         return super().timerEvent(a0)

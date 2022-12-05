@@ -8,7 +8,7 @@ class ShMem:
         self.mem = self.make_cns_mem(max_len=10)
         self.AlarmDB: AlarmDB = AlarmDB(self)
         self.add_val_to_list()
-        self.logic = {'Run': False, 'Init_Call':False, 'Init_nub': 1, 'Mal_Call': False, 'Mal_list': {}}
+        self.logic = {'Run': False, 'Init_Call':False, 'Init_nub': 1, 'Mal_LOCA_Call': False, 'Mal_Rod_Call': False, 'Mal_list': {}}
 
     def make_cns_mem(self, max_len, db_path='./db.txt', db_add_path='./db_add.txt'):
         # 초기 shared_mem의 구조를 선언한다.
@@ -79,8 +79,11 @@ class ShMem:
     def call_init(self):
         self.logic['Init_Call'] = True
     
-    def call_mal(self):
-        self.logic['Mal_Call'] = True
+    def call_mal_loca(self):
+        self.logic['Mal_LOCA_Call'] = True
+
+    def call_mal_rod(self):
+        self.logic['Mal_Rod_Call'] = True
     
     def get_logic(self, para):
         return self.logic[para]
@@ -123,5 +126,8 @@ class InterfaceMem:
     def call_freeze(self):
         [self.ShMemUnits[unit].call_freeze() for unit in self.ShMemUnits.keys()]
         
-    def call_mal(self, unit):
-        self.ShMemUnits[unit].call_mal()
+    def call_mal_loca(self, unit):
+        self.ShMemUnits[unit].call_mal_loca()
+    
+    def call_mal_rod(self, unit):
+        self.ShMemUnits[unit].call_mal_rod()

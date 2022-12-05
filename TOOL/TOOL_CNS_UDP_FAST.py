@@ -28,7 +28,7 @@ class CNS:
         self.mem = self._make_mem_structure(max_len=self.max_len)
         # logger path
         self.LoggerPath = ''
-        self.file_name = 0
+        self.file_name = threrad_name
 
         # Control
         self.SaveControlPara = []
@@ -219,7 +219,7 @@ class CNS:
         # --------- L4  Control bank lo-lo limit
         # ******* Insertion limit(Reference : KNU 5&6 PLS)
         #
-        RDTEMP = (self.mem['UMAXDT']['Val']/self.mem['CDT100']['Val']) * 100.0
+        RDTEMP = 0 #(self.mem['UMAXDT']['Val']/self.mem['CDT100']['Val']) * 100.0
         if RDTEMP >= 100.0: RDTEMP = 100.
         if RDTEMP <= 0.0: RDTEMP = 0.
         if True:

@@ -31,14 +31,14 @@ class Run:
         mem2 = self.make_shmem()
         mem3 = self.make_shmem()
         mem4 = self.make_shmem()
-        cns_ip = '192.168.195.128'
+        cns_ip = '192.168.0.6'
         cns_port = 7100
-        com_ip = '192.168.195.1'
+        com_ip = '192.168.0.12'
         p_list = [InterfaceRun([mem1, mem2, mem3, mem4]), 
-                  WrapCNS(0, mem1, cns_ip, cns_port + 1, '192.168.195.1', cns_port + 1),  
-                  WrapCNS(1, mem2, cns_ip, cns_port + 2, '192.168.195.1', cns_port + 2), 
-                  WrapCNS(2, mem3, cns_ip, cns_port + 3, '192.168.195.1', cns_port + 3), 
-                  WrapCNS(3, mem4, cns_ip, cns_port + 4, '192.168.195.1', cns_port + 4)]
+                  WrapCNS(0, mem1, cns_ip, cns_port + 1, com_ip, cns_port + 1),  
+                  WrapCNS(1, mem2, cns_ip, cns_port + 2, com_ip, cns_port + 2), 
+                  WrapCNS(2, mem3, cns_ip, cns_port + 3, com_ip, cns_port + 3), 
+                  WrapCNS(3, mem4, cns_ip, cns_port + 4, com_ip, cns_port + 4)]
         [pr_.start() for pr_ in p_list]
         [pr_.join() for pr_ in p_list]  # finished at the same time
 
